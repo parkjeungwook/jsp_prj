@@ -116,6 +116,14 @@ td{
 $(function(){
 	
 });
+
+function moveCal(month, year) {
+	// 입력된 값을 hidden에 설정하고 
+	$("#month").val(month);
+	$("#year").val(year);
+	//form에 submit을 수행
+	#("#calFrm").submit();
+}
 </script>
 </head>
 
@@ -179,15 +187,18 @@ $(function(){
 	//오늘을 표현하기 위한 flag 변수
 	boolean toDayFlag = today.toString().equals(selectDay.toString());
 %>
-
+	<form action="calendar2.jsp" method="post" id="calFrm">
+	<input type="hidden" name="year" id="year"/>
+	<input type="hidden" name="month" id="month"/>
+	</form>
 	<div id="calHeader">
-		<a href="calendar.jsp?month=<%=prevMonth%>&year=<%=prevYear%>" title="이전월">&lt;&lt;</a>
+		<a href="void" onclick="moveCal(<%=prevMonth%>,<%=prevYear%>)" title="이전월">&lt;&lt;</a>
 
 		<a href="calendar.jsp" title="오늘">
 			<span class="calTitle"><%=nowYear%>.<%=nowMonth%></span>
 		</a>
 
-		<a href="calendar.jsp?month=<%=nextMonth%>&year=<%=nextYear%>" title="다음월">&gt;&gt;</a>
+		<a href="#void" onclick="moveCal(<%=nextMonth%>,<%=nextYear%>)" title="다음월">&gt;&gt;</a>
 	</div>
 
 	<div id="calContainer">

@@ -1,0 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+<meta charset="UTF-8">
+<title>Carousel Template · Bootstrap v5.3</title>
+<meta http-equiv="refresh" content="5;http://sist.co.kr">
+</head>
+<body>
+호갱님 안녕하세요? <br>
+접속에 사용하신 http://test.com은 2026년 6월30일 까지만 사용됩니다.
+해당 기간 이후에는 새로운 URL인 http://sist.co.kr 로만 서비스를 운영하게 됩니다.<br>
+이용 불편 ㅈㅅ <br>
+30초 후에 자동으로 새로운 URL로 연결 됩니다.<br>
+바로 이동하시려면 <a href="http://sist.co.kr">여기</a>를 클랙해주세요
+</body>
+</html>
