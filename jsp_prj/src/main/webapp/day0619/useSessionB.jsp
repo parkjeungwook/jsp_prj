@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" session="false" %>
+	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -106,6 +106,32 @@
 	color: #FF0000;
 }
 </style>
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+<script type="text/javascript">
+	
+	//$(document).ready(function(){
+	$(function(){
+		$("#name").keyup(function(evt){
+			if(evt.which == 13){
+				chkNull();
+			}
+		});
+		
+		$("#btn").click(function(){
+			chkNull();
+		});//click
+	});
+	
+	function chkNull() {
+		var name = $("#name").val();
+		if(name.trim() == ""){
+			alert("이름은 필수입력!!");
+			return;
+		}//end if
+		$("#frm").submit();
+	}//chkNull
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -179,6 +205,9 @@
 					<ul class="navbar-nav me-auto mb-2 mb-md-0">
 						<li class="nav-item"><a class="nav-link active"
 							aria-current="page" href="#">메인</a></li>
+						<li class="nav-item"><a class="nav-link" href="http://localhost:8081/jsp_prj/a/a.jsp">a페이지-로그인 없이 사용</a></li>
+						<li class="nav-item"><a class="nav-link" href="http://localhost:8081/jsp_prj/b/b.jsp">b페이지</a></li>
+						<li class="nav-item"><a class="nav-link" href="http://localhost:8081/jsp_prj/c/c.jsp">c페이지</a></li>
 						<li class="nav-item"><a class="nav-link" href="#javascript:history.back()">이전으로</a></li>
 						<li class="nav-item"><a class="nav-link disabled"
 							aria-disabled="true">Disabled</a></li>
@@ -265,37 +294,77 @@
 				<span class="visually-hidden">Next</span>
 			</button>
 		</div>
+		<!-- Marketing messaging and featurettes
+  ================================================== -->
+		<!-- Wrap the rest of the page in another container to center all the content. -->
+		<div class="container marketing">
+			<!-- Three columns of text below the carousel -->
+			<div class="row">
+				<div class="col-lg-4">
+					<svg aria-label="Placeholder"
+						class="bd-placeholder-img rounded-circle" height="140"
+						preserveAspectRatio="xMidYMid slice" role="img" width="140"
+						xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-color)"></rect></svg>
+					<h2 class="fw-normal">Heading</h2>
+					<p>Some representative placeholder content for the three
+						columns of text below the carousel. This is the first column.</p>
+					<p>
+						<a class="btn btn-secondary" href="#">View details &raquo;</a>
+					</p>
+				</div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<svg aria-label="Placeholder"
+						class="bd-placeholder-img rounded-circle" height="140"
+						preserveAspectRatio="xMidYMid slice" role="img" width="140"
+						xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-color)"></rect></svg>
+					<h2 class="fw-normal">Heading</h2>
+					<p>Another exciting bit of representative placeholder content.
+						This time, we've moved on to the second column.</p>
+					<p>
+						<a class="btn btn-secondary" href="#">View details &raquo;</a>
+					</p>
+				</div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<svg aria-label="Placeholder"
+						class="bd-placeholder-img rounded-circle" height="140"
+						preserveAspectRatio="xMidYMid slice" role="img" width="140"
+						xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-color)"></rect></svg>
+					<h2 class="fw-normal">Heading</h2>
+					<p>And lastly this, the third column of representative
+						placeholder content.</p>
+					<p>
+						<a class="btn btn-secondary" href="#">View details &raquo;</a>
+					</p>
+				</div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row -->
 			<!-- START THE FEATURETTES -->
 			<hr class="featurette-divider">
 			<div class="row featurette">
 				<div class="col-md-7">
-					<div style="padding-left: 30px;">
-						<h3>name 속성의 값이 유일한 HTML Form Control 값 받기(POST방식)</h3>
-						<div>
-						<%
-						
-						request.setCharacterEncoding("UTF-8");
-						//getParameterFormProcess.jsp?text=테스트&pass=비밀번호&gender=M&agree=Y&tel=010&ta=텍스트+에어리어
-						String text=request.getParameter("text");
-						//text = new String(text.getBytes("8859_1"),"UTF-8");
-						String pass=request.getParameter("pass");
-						//pass = new String(pass.getBytes("8859_1"),"UTF-8");
-						String gender=request.getParameter("gender");
-						//checkbox는 확인하지 않으면 null이 입력된다. 
-						// NullpointerException을 발생시킬 수 있다. 
-						String agree=request.getParameter("agree");
-						String tel=request.getParameter("tel");
-						String ta=request.getParameter("ta");
-						//ta = new String(ta.getBytes("8859_1"),"UTF-8");
-						
-						%>
-						<strong> text </strong><%=text %><br>
-						<strong> password </strong><%=pass %><br>
-						<strong> radio </strong><%=gender %><br>
-						<strong> checkbox </strong><%=agree %><br>
-						<strong> select </strong><%=tel %><br>
-						<strong> textarea </strong><%=ta.replaceAll("\n", "<br>") %><br>
-						</div>
+					<h3>session의사용</h3>
+					<%
+					//parameter 값을 받아서 
+					String name = request.getParameter("name");
+					
+											
+					//session의 생존시간 
+					session.setMaxInactiveInterval(60);
+					//session
+					session.setAttribute("name", name);
+					%>
+					<span><%= name %></span>님 안녕하세요
+					<div>
+					작업 페이지로 <a href="useSessionC.jsp">이동</a>
 					</div>
 				</div>
 				<div class="col-md-5">
