@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" info="쿠키들 읽기"%>
+	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -106,32 +106,6 @@
 	color: #FF0000;
 }
 </style>
-<!-- jQuery CDN -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
-<script type="text/javascript">
-	
-	//$(document).ready(function(){
-	$(function(){
-		$("#name").keyup(function(evt){
-			if(evt.which == 13){
-				chkNull();
-			}
-		});
-		
-		$("#btn").click(function(){
-			chkNull();
-		});//click
-	});
-	
-	function chkNull() {
-		var name = $("#name").val();
-		if(name.trim() == ""){
-			alert("이름은 필수입력!!");
-			return;
-		}//end if
-		$("#frm").submit();
-	}//chkNull
-</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -348,48 +322,18 @@
 			<hr class="featurette-divider">
 			<div class="row featurette">
 				<div class="col-md-7">
-					<h3>Cookie의 사용</h3>
+					<h2 class="featurette-heading fw-normal lh-1">
 					<%
-					// 쿠키들 읽기
-					Cookie[] cookies = request.getCookies();
-					
-					boolean cookieFlag = false;
-					String cookieName = "";
-					String cookieAge = "";
-					if(cookies != null){
-						Cookie tempCookie = null;
-						for(int i=0; i < cookies.length; i++){
-							tempCookie=cookies[i];
-							if(!"JSESSIONID".equals(tempCookie.getName())){
-								cookieFlag =true;						
-								if("name".equals(tempCookie.getName())){
-								cookieName=tempCookie.getValue();
-								}//end if
-								
-								if("age".equals(tempCookie.getName())){
-								cookieAge=tempCookie.getValue();
-								}//end if
-							}//end if
-						}//end for
+					String color = "blue";
+					String method= request.getMethod();
+					if("POST".equals(method)){
+						color="red";
 					}//end if
-					
-					//if(cookieFlag){
 					%>
-					<%-- 쿠키 값 : 이름 <span><%= cookieName %></span>,
-							나이 <span><%= cookieAge %></span><br>
-							<a href="removeCookie.jsp">쿠키삭제</a> --%>
-					<% 	
-					//}else{
-					%>
-					<form action="addCookie.jsp" method="GET" id="frm">
-					<label>이름</label><input type="text" name="name" id="name" value="<%=cookieName %>"/>
-					<label>나이</label><input type="text" name="age" id="age" value="<%=cookieAge %>"/><br>
-					<!-- 이름과 나이 저장을 쿠키 상태에 따라 checked설정. -->
-					<input type="checkbox" name="useCookie" <%=cookieFlag?"checked ='checked'":"" %>/>이름과 나이 저장
-					<input type="button" value="입력" class="btn btn-success btn-sm" id="btn"/>
-					</form>
-					
-					<%//}//end else %>
+						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span>
+					</h2>
+					<p class="lead">Some great placeholder content for the first
+						featurette here. Imagine some exciting prose here.</p>
 				</div>
 				<div class="col-md-5">
 					<svg aria-label="Placeholder: 500x500"

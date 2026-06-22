@@ -1,0 +1,24 @@
+package kr.co.sist.member;
+
+import java.sql.Date;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+public class memberDTO {
+
+	private int smsReceiveYN;
+	private int emailReceiveYN;
+	private String memberCode,password,name,email,phone1,phone2,phone3,zipcode,address,address2,ip;
+	private String [] hobby;
+	
+	private Date inputeDate;
+}

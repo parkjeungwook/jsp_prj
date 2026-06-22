@@ -1,5 +1,7 @@
+<%@page import="day0622.UserDTO"%>
+<%@page import="day0612.TestDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" info="쿠키들 읽기"%>
+	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -10,12 +12,10 @@
 <meta name="generator" content="Astro v5.13.2">
 <title>Carousel Template · Bootstrap v5.3</title>
 
-<script src="http://localhost:8081/jsp_prj/common/js/color-modes.js"></script>
-<link href="http://localhost:8081/jsp_prj/common/css/bootstrap.min.css" rel="stylesheet"
-	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB">
-
 <meta name="theme-color" content="#712cf9">
-<link href="http://localhost:8081/jsp_prj/common/css/carousel.css" rel="stylesheet">
+
+<jsp:include page="../frogments/external_file.jsp"/>
+
 <style>
 .bd-placeholder-img {
 	font-size: 1.125rem;
@@ -106,32 +106,6 @@
 	color: #FF0000;
 }
 </style>
-<!-- jQuery CDN -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
-<script type="text/javascript">
-	
-	//$(document).ready(function(){
-	$(function(){
-		$("#name").keyup(function(evt){
-			if(evt.which == 13){
-				chkNull();
-			}
-		});
-		
-		$("#btn").click(function(){
-			chkNull();
-		});//click
-	});
-	
-	function chkNull() {
-		var name = $("#name").val();
-		if(name.trim() == ""){
-			alert("이름은 필수입력!!");
-			return;
-		}//end if
-		$("#frm").submit();
-	}//chkNull
-</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -193,103 +167,13 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<div class="container-fluid">
-				<!-- <a class="navbar-brand" href="#">Carousel</a> -->
-				<button class="navbar-toggler" type="button"
-					data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-					aria-controls="navbarCollapse" aria-expanded="false"
-					aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarCollapse">
-					<ul class="navbar-nav me-auto mb-2 mb-md-0">
-						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="#">메인</a></li>
-						<li class="nav-item"><a class="nav-link" href="#javascript:history.back()">이전으로</a></li>
-						<li class="nav-item"><a class="nav-link disabled"
-							aria-disabled="true">Disabled</a></li>
-					</ul>
-					<form class="d-flex" role="search">
-						<input class="form-control me-2" type="search"
-							placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-success" type="submit">Search</button>
-					</form>
-				</div>
-			</div>
+			<jsp:include page="../frogments/navigationBar.jsp"/>
 		</nav>
 	</header>
 	<main>
 		<div id="myCarousel" class="carousel slide mb-6"
 			data-bs-ride="carousel">
-			<div class="carousel-indicators">
-				<button type="button" data-bs-target="#myCarousel"
-					data-bs-slide-to="0" class="active" aria-current="true"
-					aria-label="Slide 1"></button>
-				<button type="button" data-bs-target="#myCarousel"
-					data-bs-slide-to="1" aria-label="Slide 2"></button>
-				<button type="button" data-bs-target="#myCarousel"
-					data-bs-slide-to="2" aria-label="Slide 3"></button>
-			</div>
-			<div class="carousel-inner">
-				<div class="carousel-item active">
-					<svg aria-hidden="true" class="bd-placeholder-img " height="100%"
-						preserveAspectRatio="xMidYMid slice" width="100%"
-						xmlns="http://www.w3.org/2000/svg">
-						<rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-					<div class="container">
-						<div class="carousel-caption text-start">
-							<h1>Example headline.</h1>
-							<p class="opacity-75">Some representative placeholder content
-								for the first slide of the carousel.</p>
-							<p>
-								<a class="btn btn-lg btn-primary" href="#">Sign up today</a>
-							</p>
-						</div>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<svg aria-hidden="true" class="bd-placeholder-img " height="100%"
-						preserveAspectRatio="xMidYMid slice" width="100%"
-						xmlns="http://www.w3.org/2000/svg">
-						<rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-					<div class="container">
-						<div class="carousel-caption">
-							<h1>Another example headline.</h1>
-							<p>Some representative placeholder content for the second
-								slide of the carousel.</p>
-							<p>
-								<a class="btn btn-lg btn-primary" href="#">Learn more</a>
-							</p>
-						</div>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<svg aria-hidden="true" class="bd-placeholder-img " height="100%"
-						preserveAspectRatio="xMidYMid slice" width="100%"
-						xmlns="http://www.w3.org/2000/svg">
-						<rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></svg>
-					<div class="container">
-						<div class="carousel-caption text-end">
-							<h1>One more for good measure.</h1>
-							<p>Some representative placeholder content for the third
-								slide of this carousel.</p>
-							<p>
-								<a class="btn btn-lg btn-primary" href="#">Browse gallery</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<button class="carousel-control-prev" type="button"
-				data-bs-target="#myCarousel" data-bs-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Previous</span>
-			</button>
-			<button class="carousel-control-next" type="button"
-				data-bs-target="#myCarousel" data-bs-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Next</span>
-			</button>
+			<jsp:include page="../frogments/carousel.jsp"/>
 		</div>
 		<!-- Marketing messaging and featurettes
   ================================================== -->
@@ -297,99 +181,54 @@
 		<div class="container marketing">
 			<!-- Three columns of text below the carousel -->
 			<div class="row">
-				<div class="col-lg-4">
-					<svg aria-label="Placeholder"
-						class="bd-placeholder-img rounded-circle" height="140"
-						preserveAspectRatio="xMidYMid slice" role="img" width="140"
-						xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-color)"></rect></svg>
-					<h2 class="fw-normal">Heading</h2>
-					<p>Some representative placeholder content for the three
-						columns of text below the carousel. This is the first column.</p>
-					<p>
-						<a class="btn btn-secondary" href="#">View details &raquo;</a>
-					</p>
+				<%-- <jsp:include page="../frogments/row.jsp"/> --%>
+				<%
+				//testDTO를 생성하여 이름에"홍길동"을 나이에 20살을 저장
+				UserDTO uDTO = new UserDTO();
+				//2. 값을 할당 
+				uDTO.setName("홍길동");
+				uDTO.setEmail("hong@test.com");
+				uDTO.setAge(20);
+				//3.출력
+				%>
+				-->
+				<div>
+				이름 : <span><%= uDTO.getName() %></span><br>
+				이메일 : <span><%= uDTO.getEmail() %></span><br>
+				나이 : <span><%= uDTO.getAge() %></span><br>
 				</div>
-				<!-- /.col-lg-4 -->
-				<div class="col-lg-4">
-					<svg aria-label="Placeholder"
-						class="bd-placeholder-img rounded-circle" height="140"
-						preserveAspectRatio="xMidYMid slice" role="img" width="140"
-						xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-color)"></rect></svg>
-					<h2 class="fw-normal">Heading</h2>
-					<p>Another exciting bit of representative placeholder content.
-						This time, we've moved on to the second column.</p>
-					<p>
-						<a class="btn btn-secondary" href="#">View details &raquo;</a>
-					</p>
+				<div>
+				<jsp:useBean id="ud" class="day0622.UserDTO" scope="session"/>
+				<!-- setter method 호출 -->
+				<jsp:setProperty property="name" name="ud" value="윤인성"/>
+				<jsp:setProperty property="email" name="ud" value="yonn@test.com"/>
+				<jsp:setProperty property="age" name="ud" value="31"/>
 				</div>
-				<!-- /.col-lg-4 -->
-				<div class="col-lg-4">
-					<svg aria-label="Placeholder"
-						class="bd-placeholder-img rounded-circle" height="140"
-						preserveAspectRatio="xMidYMid slice" role="img" width="140"
-						xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-color)"></rect></svg>
-					<h2 class="fw-normal">Heading</h2>
-					<p>And lastly this, the third column of representative
-						placeholder content.</p>
-					<p>
-						<a class="btn btn-secondary" href="#">View details &raquo;</a>
-					</p>
-				</div>
-				<!-- /.col-lg-4 -->
+				이름 : <span><jsp:getProperty property="name" name="ud"/></span>
+				이메일 : <span><jsp:getProperty property="email" name="ud"/></span>
+				나이 : <span><jsp:getProperty property="age" name="ud"/></span>
+				
+				id가 객체명이므로 script에서 해당 객체를 사용할 수 있다.
+				<% String name=ud.getName(); %>
+				<%= name %>,<%= ud.getEmail() %>
 			</div>
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->
 			<hr class="featurette-divider">
 			<div class="row featurette">
 				<div class="col-md-7">
-					<h3>Cookie의 사용</h3>
+					<h2 class="featurette-heading fw-normal lh-1">
 					<%
-					// 쿠키들 읽기
-					Cookie[] cookies = request.getCookies();
-					
-					boolean cookieFlag = false;
-					String cookieName = "";
-					String cookieAge = "";
-					if(cookies != null){
-						Cookie tempCookie = null;
-						for(int i=0; i < cookies.length; i++){
-							tempCookie=cookies[i];
-							if(!"JSESSIONID".equals(tempCookie.getName())){
-								cookieFlag =true;						
-								if("name".equals(tempCookie.getName())){
-								cookieName=tempCookie.getValue();
-								}//end if
-								
-								if("age".equals(tempCookie.getName())){
-								cookieAge=tempCookie.getValue();
-								}//end if
-							}//end if
-						}//end for
+					String color = "blue";
+					String method= request.getMethod();
+					if("POST".equals(method)){
+						color="red";
 					}//end if
-					
-					//if(cookieFlag){
 					%>
-					<%-- 쿠키 값 : 이름 <span><%= cookieName %></span>,
-							나이 <span><%= cookieAge %></span><br>
-							<a href="removeCookie.jsp">쿠키삭제</a> --%>
-					<% 	
-					//}else{
-					%>
-					<form action="addCookie.jsp" method="GET" id="frm">
-					<label>이름</label><input type="text" name="name" id="name" value="<%=cookieName %>"/>
-					<label>나이</label><input type="text" name="age" id="age" value="<%=cookieAge %>"/><br>
-					<!-- 이름과 나이 저장을 쿠키 상태에 따라 checked설정. -->
-					<input type="checkbox" name="useCookie" <%=cookieFlag?"checked ='checked'":"" %>/>이름과 나이 저장
-					<input type="button" value="입력" class="btn btn-success btn-sm" id="btn"/>
-					</form>
-					
-					<%//}//end else %>
+						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span>
+					</h2>
+					<p class="lead">Some great placeholder content for the first
+						featurette here. Imagine some exciting prose here.</p>
 				</div>
 				<div class="col-md-5">
 					<svg aria-label="Placeholder: 500x500"
@@ -449,13 +288,7 @@
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<p class="float-end">
-				<a href="#">Back to top</a>
-			</p>
-			<p>
-				&copy; class
-				
-			</p>
+			<jsp:include page="../frogments/footer.jsp"/>
 		</footer>
 	</main>
 	<script src="http://localhost:8081/jsp_prj/common/js/bootstrap.bundle.min.js"
