@@ -1,8 +1,7 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../include/loginChk2.jsp" %>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -179,22 +178,24 @@
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
+		<c:if test="${not empty sessionScope.sesName}">
+		<a href="#void">로그아웃</a>
+		<a href="#void">마이페이지</a>
+		</c:if>
+		<c:if test="${empty sesName}">
+		<a href="#void">로그인</a>
+		</c:if>
+		
+
+
+		<div>
+		<c:if test="${empty param.param}"> 아래의 요청을 눌러 클릭해주세요 </c:if>
+		
+		</div>
+		<a href="jstl_if.jsp?param=test">요청</a>
 			<!-- Three columns of text below the carousel -->
 			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
+				<jsp:include page="../frogments/row.jsp"/>
 			</div>
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->

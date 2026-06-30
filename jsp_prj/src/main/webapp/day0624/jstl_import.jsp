@@ -1,7 +1,6 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -14,7 +13,7 @@
 
 <meta name="theme-color" content="#712cf9">
 
-<jsp:include page="../frogments/external_file.jsp"/>
+<c:import url="http://localhost:8081/jsp_prj/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -167,13 +166,13 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<jsp:include page="../frogments/navigationBar.jsp"/>
+			<c:import url="http://localhost:8081/jsp_prj/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
 		<div id="myCarousel" class="carousel slide mb-6"
 			data-bs-ride="carousel">
-			<jsp:include page="../frogments/carousel.jsp"/>
+			<c:import url="http://localhost:8081/jsp_prj/frogments/carousel.jsp"/>
 		</div>
 		<!-- Marketing messaging and featurettes
   ================================================== -->
@@ -181,20 +180,7 @@
 		<div class="container marketing">
 			<!-- Three columns of text below the carousel -->
 			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
+				<c:import url="http://localhost:8081/jsp_prj/frogments/row.jsp"/>
 			</div>
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->
@@ -272,7 +258,7 @@
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<jsp:include page="../frogments/footer.jsp"/>
+			<c:import url="http://localhost:8081/jsp_prj/frogments/footer.jsp"/>
 		</footer>
 	</main>
 	<script src="http://localhost:8081/jsp_prj/common/js/bootstrap.bundle.min.js"

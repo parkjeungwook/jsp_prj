@@ -1,7 +1,7 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="../include/site_Property.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -14,7 +14,7 @@
 
 <meta name="theme-color" content="#712cf9">
 
-<jsp:include page="../frogments/external_file.jsp"/>
+<c:import url="${ CommonUrl }/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -106,6 +106,83 @@
 	color: #FF0000;
 }
 </style>
+<script type="text/javascript">
+$(function() {
+	$("#btnHtml").click(requestHTML);
+	$("#btnText").click(requestTEXT);
+	$("#btnXml").click(requestXML);
+	$("#btnJson").click(requestJSON);
+})//ready
+
+function requestHTML() {
+	$.ajax({
+		url:"responseHtml.jsp",
+		type:"post",
+		data:"naem=테스트&age=20",
+		
+		error: function(xhr) {
+			console.log(xhr.status+"/"+xhr.statusText)
+		},
+		success:function(data){
+			$("#output").html(data);
+		}
+	});//ajax
+}//requestHTML
+function requestTEXT() {
+	$.ajax({
+		url:"responseText.jsp",
+		dataType:"text",
+		error: function(xhr) {
+			console.log(xhr.status+"/"+xhr.statusText)
+		},
+		success:function(data){
+			var arr = data.split(",");
+			var output="<ul>";
+			
+			var selNode=$("#subject")[0];
+			//alert(selNode)
+			
+			$.each(arr,function(i, ele){
+			output +="<li>"+ele+"</li>";
+			selNode.options[i+1]=new Option(ele+"과목", ele);
+			});//each
+			
+			output+="</ul>"
+			
+			$("#output").html(data);
+		}
+	});//ajax
+}//requestTEXT
+function requestXML() {
+	$.ajax({
+		url:"responseXml.jsp",
+		dataType:"xml",
+		error: function(xhr) {
+			console.log(xhr.status+"/"+xhr.statusText)
+		},
+		success:function(xmlDoc){
+			
+			$("#output").html("<strong>"+$(xmlDoc).find("msg").text()+"</strong>");
+			
+		}
+	});//ajax
+}//requestXML
+function requestJSON() {
+	$.ajax({
+		url:"testJsonObj.jsp",
+		dataType:"json",
+		error: function(xhr) {
+			console.log(xhr.status+"/"+xhr.statusText)
+		},
+		success:function(jsonObj){
+			
+			$("#output").html("<strong>"+ jsonObj.name + "</strong><br>"
+					+ jsonObj.age + "/" + jsonObj.addr);
+			
+		}
+	});//ajax
+}//requestXML
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -167,115 +244,28 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<jsp:include page="../frogments/navigationBar.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<jsp:include page="../frogments/carousel.jsp"/>
+		<div style="margin-top: 50px;">
+			<h3>AJAX에 대한 요청과 응답</h3>
+			<input type="button" class="btn btn-success brn-sm" value="HTML요청" id="btnHtml"/>
+			<input type="button" class="btn btn-primary brn-sm" value="TEXT요청" id="btnText"/>
+			<input type="button" class="btn btn-warning brn-sm" value="XML요청" id="btnXml"/>
+			<input type="button" class="btn btn-info brn-sm" value="JSON요청" id="btnJson"/>
 		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
-			</div>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-					<%
-					String color = "blue";
-					String method= request.getMethod();
-					if("POST".equals(method)){
-						color="red";
-					}//end if
-					%>
-						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span>
-					</h2>
-					<p class="lead">Some great placeholder content for the first
-						featurette here. Imagine some exciting prose here.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7 order-md-2">
-					<h2 class="featurette-heading fw-normal lh-1">
-						Oh yeah, it’s that good. <span class="text-body-secondary">See
-							for yourself.</span>
-					</h2>
-					<p class="lead">Another featurette? Of course. More placeholder
-						content here to give you an idea of how this layout would work
-						with some actual real-world content in place.</p>
-				</div>
-				<div class="col-md-5 order-md-1">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-						And lastly, this one. <span class="text-body-secondary">Checkmate.</span>
-					</h2>
-					<p class="lead">And yes, this is the last block of
-						representative placeholder content. Again, not really intended to
-						be actually read, simply here to give you a better view of what
-						this would look like with some actual content. Your content.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<!-- /END THE FEATURETTES -->
-		</div>
+		<select id="subject">
+			<option value="none">-- 과목 선택 -- </option>
+		</select>
+		<div id="output"></div>
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<jsp:include page="../frogments/footer.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/footer.jsp"/>
 		</footer>
 	</main>
-	<script src="http://localhost:8081/jsp_prj/common/js/bootstrap.bundle.min.js"
+	<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>

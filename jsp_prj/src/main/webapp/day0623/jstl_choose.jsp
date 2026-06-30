@@ -1,8 +1,7 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../include/loginChk2.jsp" %>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -179,22 +178,32 @@
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
+		<c:choose>
+			<c:when test="${not empty sessionScope.sesName}">
+				<a href="#void">로그아웃</a>
+				<a href="#void">마이페이지</a>
+			</c:when>
+			<c:otherwise>
+				<a href="#void">로그인</a>
+			</c:otherwise>
+		</c:choose>
+		<div>
+		<c:choose>
+			<c:when test="${ param.role == 'user'}">읽기|쓰기</c:when>
+			<c:when test="${ param.role == 'admin'}">읽기|쓰기|삭제|변경</c:when>
+			<c:otherwise>
+				쓰기				
+			</c:otherwise>
+		</c:choose>
+			
+		
+		</div>
+		[<a href="jstl_choose.jsp?role=guest">손님</a>|
+		<a href="jstl_choose.jsp?role=user">일반사용자</a>|
+		<a href="jstl_choose.jsp?role=admin">관리자</a>]
 			<!-- Three columns of text below the carousel -->
 			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
+				<jsp:include page="../frogments/row.jsp"/>
 			</div>
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->

@@ -1,5 +1,3 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -181,20 +179,53 @@
 		<div class="container marketing">
 			<!-- Three columns of text below the carousel -->
 			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
+			<%
+			String name = "테스트";
+			int age = 20;
+			%>
+			<div>
+				<strong>EL에서는 변수에 직접 접근을 할 수 없다.</strong><br>
+				이름 : <span>${ name }</span>			
+				나이 : <span>${ age }</span>			
+			</div>
+			<%
+			// 1. 변수 선언 
+			int year = 2026;
+			int month = 6;
+			int day = 23;
+			int hour = 9;
+			// 2. 변수의 값을 EL에서 사용하기 위해 scope 객체에 설정 
+			pageContext.setAttribute("year", year);
+			request.setAttribute("month", month);
+			session.setAttribute("day", day);
+			application.setAttribute("hour", hour);
+			
+			boolean flag=false;
+			pageContext.setAttribute("flag", flag);
+			%>
+			pageScope : <span>${pageScope.year} (${year})</span>
+			requestScope : <span>${requestScope.month} (${month})</span>
+			sessionScope : <span>${sessionScope.day} (${day})</span>
+			<!-- scope 객체의 이름과 동일한 이름이 들어가 있을 떄 scope 객체명을 
+			생략하면 접근이 작은 scope 객체에 값을 가져다 사용한다. -->
+			applicationScope : <span>${applicationScope.hour} (${hour})</span>
+			</div>
+			<div>
+			<strong>연산자</strong><br>
+			${flag}/${!flag}/${ not flag }<br>
+			${year}/${year+1}/${ year%12 }/${ year mod 12 }<br>
+			<%--${year << 2 }<br> EL에서 존재하지 않는 연산자는 사용할 수 없다. --%>
+			${ year > month } (${ year gt month })<br>
+			${ year < month } (${ year lt month })<br>
+			${ year >= month } (${ year ge month })<br>
+			${ year <= month } (${ year le month })<br>
+			${ year == month } (${ year eq month })<br>
+			<!-- EL에는 문자가 존재하지 않는다 문자열만 존재한다. -->
+			${ "자바" == '자바' } (${ "자바" eq '자바' })<br>
+			${ year != month } (${ year ne month })<br>
+			${ year < month && day > month } (${ year gt month or day gt month })<br>
+			${ year < month || day > month } (${ year gt month and day gt month })<br>
+			삼항 : ${year%2==0?"짝수":"홀수"} (${year mod 2 eq 0?"짝수":"홀수"})
 			</div>
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->

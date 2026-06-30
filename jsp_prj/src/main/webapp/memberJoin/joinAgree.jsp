@@ -23,7 +23,7 @@
         <% } %>
 
         <form id="agreementForm" method="post"
-              action="<%=request.getContextPath()%>/member/join-form.do">
+              action="<%=request.getContextPath()%>/memberJoin/joinForm.jsp">
             <h2 class="member-section-title">이용약관 동의</h2>
 
             <div class="member-agreement">
@@ -87,7 +87,7 @@
 
             <div id="clientError" class="member-error" hidden></div>
             <div class="member-actions">
-                <a class="member-button member-button-light" href="<%=request.getContextPath()%>/main.do">취소</a>
+                <a class="member-button member-button-light" href="<%=request.getContextPath()%>/index.jsp">취소</a>
                 <button class="member-button" type="submit">다음</button>
             </div>
         </form>
@@ -95,4 +95,3 @@
 </main>
 </body>
 </html>
-

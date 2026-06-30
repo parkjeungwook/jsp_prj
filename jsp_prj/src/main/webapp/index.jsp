@@ -1,7 +1,7 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="include/site_Property.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -14,7 +14,7 @@
 
 <meta name="theme-color" content="#712cf9">
 
-<jsp:include page="../frogments/external_file.jsp"/>
+<c:import url="/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -106,6 +106,9 @@
 	color: #FF0000;
 }
 </style>
+<script type="text/javascript">
+var obj = new XMLHttpRequest();
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -167,13 +170,13 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<jsp:include page="../frogments/navigationBar.jsp"/>
+			<c:import url="/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
 		<div id="myCarousel" class="carousel slide mb-6"
 			data-bs-ride="carousel">
-			<jsp:include page="../frogments/carousel.jsp"/>
+			<c:import url="/frogments/carousel.jsp"/>
 		</div>
 		<!-- Marketing messaging and featurettes
   ================================================== -->
@@ -181,20 +184,7 @@
 		<div class="container marketing">
 			<!-- Three columns of text below the carousel -->
 			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
+				<c:import url="/frogments/row.jsp"/>
 			</div>
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->
@@ -209,7 +199,7 @@
 						color="red";
 					}//end if
 					%>
-						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span>
+						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span></span>
 					</h2>
 					<p class="lead">Some great placeholder content for the first
 						featurette here. Imagine some exciting prose here.</p>
@@ -272,10 +262,10 @@
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<jsp:include page="../frogments/footer.jsp"/>
+			<c:import url="/frogments/footer.jsp"/>
 		</footer>
 	</main>
-	<script src="http://localhost:8081/jsp_prj/common/js/bootstrap.bundle.min.js"
+	<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>

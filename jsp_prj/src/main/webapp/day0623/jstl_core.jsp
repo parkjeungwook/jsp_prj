@@ -1,8 +1,6 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -179,23 +177,22 @@
   ================================================== -->
 		<!-- Wrap the rest of the page in another container to center all the content. -->
 		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
-			</div>
+			<!-- 변수의 선언 -->
+			<c:set var="name" value="<strong>테스트</strong>"/>
+			<c:set var="age" value="20"/>
+			<!-- 변수의 출력 -->
+			이름 : ${ name } <!-- EL은 HTML 해석 -->
+			나이 : ${ age }
+			<hr>
+			<c:out value="${ name }" escapeXml="false"/><!-- HTML 해석하지 않는다. -->
+			<c:out value="${ age }"/>
+			<hr>
+			<!-- 변수의 삭제 -->
+			<c:remove var="name"/><!-- HTML 해석하지 않는다. -->
+			<c:remove var="age"/>
+			<c:out value="${ name }" escapeXml="false"/><!-- HTML 해석하지 않는다. -->
+			<c:out value="${ age }"/>
+			
 			<!-- /.row -->
 			<!-- START THE FEATURETTES -->
 			<hr class="featurette-divider">

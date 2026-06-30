@@ -1,8 +1,8 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.lang.reflect.Array"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ include file="../include/site_Property.jsp" %>   
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../include/loginCheck.jsp"  %> 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -10,11 +10,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="generator" content="Astro v5.13.2">
-<title>Carousel Template · Bootstrap v5.3</title>
+<title>마이페이지</title>
 
 <meta name="theme-color" content="#712cf9">
 
-<jsp:include page="../frogments/external_file.jsp"/>
+<c:import url="${CommonURL}/fragments/external_file.jsp"/>
 
 <style>
 .bd-placeholder-img {
@@ -98,14 +98,21 @@
 	display: block !important
 }
 
-.blue{
-	color: #0000FF;
-}
+#프로필 디자인
+#profileWrap{ width: 100%; min-height: 600px; margin-top: 20px;background-color: #FF0000 }
 
-.read{
-	color: #FF0000;
-}
+
 </style>
+
+<script type="text/javascript">
+$(function(){
+	//이미지 선택 버튼이 클릭
+	$("#btnPorfile").click(function(){
+		//버튼을 클릭했을 때 input type="file"을 클릭한 이벤트를 발생
+		$("#profile").click();
+	});//click
+});//ready
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -167,115 +174,85 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<jsp:include page="../frogments/navigationBar.jsp"/>
+		<c:import url="/fragments/navigationBar.jsp"/>
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<jsp:include page="../frogments/carousel.jsp"/>
-		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-			<div class="row">
-				<h2>이동한 디자인 페이지</h2>
-				<%
-				request.setCharacterEncoding("UTF-8");
-				//request 객체에 속성으로 추가된 값 
-				String name = (String)request.getAttribute("name");
-				String[] jobArr = (String[])request.getAttribute("jobArr");
-				//web parameter로 생성된 값
-				String addr = request.getParameter("addr");
-				String addr2 = request.getParameter("addr2");
-				%>
-				이름 : <%=name %><br>
-				직무 : <%=Arrays.toString(jobArr) %><br>
-				주소 : <%=addr %><br>
-				주소2 : <%=addr2 %><br>
-			</div>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-					<%
-					String color = "blue";
-					String method= request.getMethod();
-					if("POST".equals(method)){
-						color="red";
-					}//end if
-					%>
-						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span>
-					</h2>
-					<p class="lead">Some great placeholder content for the first
-						featurette here. Imagine some exciting prose here.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7 order-md-2">
-					<h2 class="featurette-heading fw-normal lh-1">
-						Oh yeah, it’s that good. <span class="text-body-secondary">See
-							for yourself.</span>
-					</h2>
-					<p class="lead">Another featurette? Of course. More placeholder
-						content here to give you an idea of how this layout would work
-						with some actual real-world content in place.</p>
-				</div>
-				<div class="col-md-5 order-md-1">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-						And lastly, this one. <span class="text-body-secondary">Checkmate.</span>
-					</h2>
-					<p class="lead">And yes, this is the last block of
-						representative placeholder content. Again, not really intended to
-						be actually read, simply here to give you a better view of what
-						this would look like with some actual content. Your content.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<!-- /END THE FEATURETTES -->
-		</div>
+		
 		<!-- /.container -->
+		<div id="profileWrap" style="margin-top: 50px; ">
+		<form action="mypageProcess.jsp" method="post" id="mypageForm" name="mypageForm">
+		<table style="margin: 0px auto">
+		<tr>
+		<td style="vertical-align: top;width: 300px ">
+		<img src="${ CommonUrl }${ upoloadDir }/profile/default_profile.png"
+		 style="border-radius: 150px"/><br>
+		 <input type="file" name="profile" id="profile" style="display: none;"/>
+		 <input type="button" value="이미지업로드" class="btn btn-success btn-sm"
+		  id="btnPorfile"/>
+		</td>
+		<td>
+		<h3>마이페이지- 정보수정</h3>
+		<table>
+		<tr>
+		<td>아이디</td>
+		<td><strong><c:out value="${ userInfo.id }"/></strong></td>
+		</tr>
+		<tr>
+		<td>이름</td>
+		<td><input type="text" name="name" value="" readonly="readonly"></td>
+		</tr>
+		<tr>
+		<td>이메일</td>
+		<td><input type="text" name="email" value=""></td>
+		</tr>
+		<tr>
+		<td>전화번호</td>
+		<td><input type="text" name="email" value=""></td>
+		</tr>
+		<tr>
+		<td>우편번호</td>
+		<td><input type="text" name="zipcode" value="" style="width: 70px"
+				readonly="readonly"> 
+				<input type="button" value="검색" class="btn btn-success btn-sm"/></td>
+		</tr>
+		<tr>
+		<td>주소</td>
+		<td><input type="text" name="address" value="" style="width: 300px"
+				readonly="readonly"> 
+		</td>
+		</tr>
+		<tr>
+		<td>상세주소</td>
+		<td><input type="text" name="address2" value="" style="width: 300px"/></td>
+		</tr>
+		<tr>
+		<td>가입 ip주소</td>
+		<td></td>
+		</tr>
+		<tr>
+		<td>가입일</td>
+		<td></td>
+		</tr>
+		<tr>
+		<td colspan="2" align="center">
+			<input type="button" value="변경" class="btn btn-warning btn-sm" 
+			id="btnUpdate"/>
+		</td>
+		</tr>
+		
+		</table>
+		</td>
+		</tr>
+		</table>
+		</form>
+		</div>
 		<!-- FOOTER -->
 		<footer class="container">
-			<jsp:include page="../frogments/footer.jsp"/>
+			<c:import url="${CommonUrl}/fragments/footer.jsp"/>
 		</footer>
 	</main>
-	<script src="http://localhost:8081/jsp_prj/common/js/bootstrap.bundle.min.js"
+	<script src="${CommonUrl}/common/js/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>
