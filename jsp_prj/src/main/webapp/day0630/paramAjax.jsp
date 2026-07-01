@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/site_Property.jsp" %>
+<%@ include file="../include/site_Property.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -14,7 +14,7 @@
 
 <meta name="theme-color" content="#712cf9">
 
-<c:import url="/frogments/external_file.jsp"></c:import>
+<c:import url="${ CommonUrl }/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -107,7 +107,83 @@
 }
 </style>
 <script type="text/javascript">
-var obj = new XMLHttpRequest();
+$(function(){
+	$("#btnQueryString").click(useQueryString);
+	$("#btnJSON").click(useJSON);
+});//ready
+
+function useQueryString() {
+	var name = $("#name").val();
+	var age = $("#age").val();
+	var addr = $("#addr").val();
+	
+	//QueryString 생성 
+	var param = "na="+name+"&age="+age+"&address="+addr+"&type=QueryString";
+	
+	$.ajax({
+		url : "ajaxParamProcess.jsp",
+		type : "get",
+		data : param,
+		dataType : "JSON",
+		
+		error: function(xhr){
+			console.log(xhr.status + "/" + xhr.statusText);
+		},
+		success: function(jsonObj){
+			//응답받은 데이터를 parsing 하여 사용 
+			var output = "<div>"+jsonObj.type+":"+jsonObj.userName+"/"+jsonObj.userAge+"/"+jsonObj.userAddr+"</div>";
+			
+//			$("#output").html(output);
+			$("#output").append(output);
+			
+			//입력폼에 초기화
+			$("#name").val("");
+			$("#age").val("");
+			$("#addr").val("");
+		}
+	});//ajax
+}//useQueryString
+function useJSON() {
+	var name = $("#name").val();
+	var age = $("#age").val();
+	var addr = $("#addr").val();
+	
+	//JSONObject 생성 
+	var param = {na:name, age:age, address:addr, type:"JSONObject"};
+	
+	$.ajax({
+		url : "ajaxParamProcess.jsp",
+		type : "get",
+		data : param,
+		dataType : "JSON",
+		
+		error: function(xhr){
+			console.log(xhr.status + "/" + xhr.statusText);
+		},
+		success: function(jsonObj){
+			//응답받은 데이터를 parsing 하여 사용 
+			var output = "<div>"+jsonObj.type+":"+jsonObj.userName+"/"+jsonObj.userAge+"/"+jsonObj.userAddr+"</div>";
+			
+			//JSONObject 안에 JSONArray를 parsing하여 반복 시켜 JSON Array안에 JSONObject을 얻어서 parsing 한다 . 
+				output+="<ul>"
+			$.each(jsonObj.data, function(i, jsonTemp){
+				//JSONArray 안에 JSONObject을 얻어와서 Parsing 
+				output+="<li>"+jsonTemp.subject+"</li>"
+			});//each
+				output+="</ul>"
+			
+			
+//			$("#output").html(output);
+			$("#output").append(output);
+			
+			//입력폼에 초기화
+			$("#name").val("");
+			$("#age").val("");
+			$("#addr").val("");
+		}
+	});//ajax
+}//useJSON
+
 </script>
 </head>
 <body>
@@ -170,102 +246,25 @@ var obj = new XMLHttpRequest();
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="/frogments/navigationBar.jsp"></c:import>
+			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<c:import url="/frogments/carousel.jsp"/>
-		</div>
-		<div>
-			<a href="${CommonUrl}/board/boardList.jsp">게시판</a>
-		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-			<div class="row">
-				<c:import url="/frogments/row.jsp"/>
+		<div style="margin-top: 50px;">
+			<h3>AJAX로 web parameter 전송</h3>
+			<label>이름</label><input type="text" name="name" id="name"/><br>
+			<label>나이</label><input type="text" name="age" id="age"/><br>
+			<label>주소</label><input type="text" name="addr" id="addr"/><br>
+			<input type="button" value="QueryString 형식" class="btn btn-warning btn-sm" id="btnQueryString"/>
+			<input type="button" value="JSONObject 형식" class="btn btn-primary btn-sm" id="btnJSON"/>
+			
+			<div id="output" style="min-height: 200px; overflow: auto; border: 3px solid #333;">
 			</div>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-					<%
-					String color = "blue";
-					String method= request.getMethod();
-					if("POST".equals(method)){
-						color="red";
-					}//end if
-					%>
-						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span></span>
-					</h2>
-					<p class="lead">Some great placeholder content for the first
-						featurette here. Imagine some exciting prose here.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7 order-md-2">
-					<h2 class="featurette-heading fw-normal lh-1">
-						Oh yeah, it’s that good. <span class="text-body-secondary">See
-							for yourself.</span>
-					</h2>
-					<p class="lead">Another featurette? Of course. More placeholder
-						content here to give you an idea of how this layout would work
-						with some actual real-world content in place.</p>
-				</div>
-				<div class="col-md-5 order-md-1">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-						And lastly, this one. <span class="text-body-secondary">Checkmate.</span>
-					</h2>
-					<p class="lead">And yes, this is the last block of
-						representative placeholder content. Again, not really intended to
-						be actually read, simply here to give you a better view of what
-						this would look like with some actual content. Your content.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<!-- /END THE FEATURETTES -->
-		</div>
-		<!-- /.container -->
+
+		</div>		
 		<!-- FOOTER -->
 		<footer class="container">
-			<c:import url="/frogments/footer.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/footer.jsp"/>
 		</footer>
 	</main>
 	<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"

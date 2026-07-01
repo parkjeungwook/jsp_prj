@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/site_Property.jsp" %>
+<%@ include file="../include/site_Property.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -14,7 +14,7 @@
 
 <meta name="theme-color" content="#712cf9">
 
-<c:import url="/frogments/external_file.jsp"></c:import>
+<c:import url="${ CommonUrl }/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -106,9 +106,39 @@
 	color: #FF0000;
 }
 </style>
+<!-- include summernote css/js-->
+<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"></script>
+<link href="${ CommonUrl }/common/summernote/summernote-bs5.min.css" rel="stylesheet">
+<script src="${ CommonUrl }/common/summernote/summernote-bs5.min.js"></script>
+	
 <script type="text/javascript">
-var obj = new XMLHttpRequest();
+	
+	//$(document).ready(function(){
+	$(function(){
+		 $('#content').summernote({
+        placeholder: '아무말 대잔치',
+        tabsize: 2,
+        height: 400,
+        width:600,
+        toolbar: [
+        	['fontsize', ['fontsize']],
+        	['color', ['color']],
+        	['insert', ['picture']],
+        ]
+      });
+		 $('#btnWrite').click(chkNull);
+	});
+	
+	function chkNull() {
+		//alert($("#content").val() == "<p></p>");
+		if($('#title').val().trim() ==""){
+			alert(" 제목은 필수 입력 !!! ");
+			return;
+		}//end if
+		$("#writeForm").submit();
+	}//chkNull
 </script>
+
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -170,106 +200,47 @@ var obj = new XMLHttpRequest();
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="/frogments/navigationBar.jsp"></c:import>
+			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<c:import url="/frogments/carousel.jsp"/>
-		</div>
-		<div>
-			<a href="${CommonUrl}/board/boardList.jsp">게시판</a>
-		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-			<div class="row">
-				<c:import url="/frogments/row.jsp"/>
-			</div>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-					<%
-					String color = "blue";
-					String method= request.getMethod();
-					if("POST".equals(method)){
-						color="red";
-					}//end if
-					%>
-						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span></span>
-					</h2>
-					<p class="lead">Some great placeholder content for the first
-						featurette here. Imagine some exciting prose here.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7 order-md-2">
-					<h2 class="featurette-heading fw-normal lh-1">
-						Oh yeah, it’s that good. <span class="text-body-secondary">See
-							for yourself.</span>
-					</h2>
-					<p class="lead">Another featurette? Of course. More placeholder
-						content here to give you an idea of how this layout would work
-						with some actual real-world content in place.</p>
-				</div>
-				<div class="col-md-5 order-md-1">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-						And lastly, this one. <span class="text-body-secondary">Checkmate.</span>
-					</h2>
-					<p class="lead">And yes, this is the last block of
-						representative placeholder content. Again, not really intended to
-						be actually read, simply here to give you a better view of what
-						this would look like with some actual content. Your content.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<!-- /END THE FEATURETTES -->
+		<div id="divWriteForm" style="margin-top: 20px;">
+			<form action="boardWriteFormProcess.jsp" method="post" name="writeForm" id="writeForm">
+				<table>
+					<tr>
+						<th colspan="2" style="text-align: center;"><h3>아무말 대잔치 글읽기</h3></th>
+					</tr>
+					<tr>
+						<td width="120px">제목</td>
+						<td><input type="text" name="title" id="title" style="width: 600px"></td>
+					</tr>
+					<tr>
+						<td>내용</td>
+						<td><textarea name="content" id="content"></textarea></td>
+					</tr>
+					<tr>
+						<td>작성자</td>
+						<td><c:out value="${ userId }(${ userName }님)"></c:out></td>
+					</tr>
+					<tr>
+						<td>ip</td>
+						<td><%= request.getRemoteAddr() %></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center">
+							<input type="button" value="글수정" id="btnUpdate" class="btn btn-primary btn-sm"/>
+							<input type="button" value="글삭제" id="btnDelete" class="btn btn-warning btn-sm"/>
+							<a href="javascript:history.back()" class="btn btn-primary btn-sm">리스트</a>
+						</td>
+					</tr>
+				</table>		
+			</form>
 		</div>
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<c:import url="/frogments/footer.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/footer.jsp"/>
 		</footer>
 	</main>
-	<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"
-		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-		class="astro-vvvwv3sm"></script>
 </body>
 </html>

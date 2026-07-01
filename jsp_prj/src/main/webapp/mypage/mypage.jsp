@@ -14,7 +14,7 @@
 
 <meta name="theme-color" content="#712cf9">
 
-<c:import url="${CommonURL}/fragments/external_file.jsp"/>
+<c:import url="${CommonUrl}/frogments/external_file.jsp"/>
 
 <style>
 .bd-placeholder-img {
@@ -84,7 +84,7 @@
 	--bs-btn-active-bg: #5a23c8;
 	--bs-btn-active-border-color: #5a23c8
 }
-
+ 
 .bd-mode-toggle {
 	z-index: 1500
 }
@@ -110,6 +110,32 @@ $(function(){
 	$("#btnPorfile").click(function(){
 		//버튼을 클릭했을 때 input type="file"을 클릭한 이벤트를 발생
 		$("#profile").click();
+	});//click
+	
+	$("#btnSearch").click(function(){
+		
+		var param = { id : "${userInfo.id}" };
+		
+		$.ajax({
+			url : "searchMyPage.jsp",
+			type : "post",
+			data : param,
+			dataType : "JSON",
+			error:function(xhr){
+				console.log(xhr.status + "/" + xhr.statusText);
+			},
+			success:function(jsonObj){
+				$("#profile")[0].src="${ CommonUrl }{ uploadDir}/profile/"+jsonObj.profile;
+				$("#name").val(jsonObj.name);
+				$("#email").val(jsonObj.email);
+				$("#phone").val(jsonObj.phone);
+				$("#zipcode").val(jsonObj.zipcode);
+				$("#address").val(jsonObj.address);
+				$("#address2").val(jsonObj.address2);
+				$("#ip").html(jsonObj.ip);
+				$("#inputDate").html(jsonObj.input_date);
+			}
+		});
 	});//click
 });//ready
 </script>
@@ -174,7 +200,7 @@ $(function(){
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<c:import url="/fragments/navigationBar.jsp"/>
+		<c:import url="/frogments/navigationBar.jsp"/>
 		</nav>
 	</header>
 	<main>
@@ -185,8 +211,8 @@ $(function(){
 		<table style="margin: 0px auto">
 		<tr>
 		<td style="vertical-align: top;width: 300px ">
-		<img src="${ CommonUrl }${ upoloadDir }/profile/default_profile.png"
-		 style="border-radius: 150px"/><br>
+		<img src="${ CommonUrl }${ uploadDir }/profile/default_profile.png"
+		 style="border-radius: 150px; width: 150px; height: 150px;" id="profile"/><br>
 		 <input type="file" name="profile" id="profile" style="display: none;"/>
 		 <input type="button" value="이미지업로드" class="btn btn-success btn-sm"
 		  id="btnPorfile"/>
@@ -196,43 +222,44 @@ $(function(){
 		<table>
 		<tr>
 		<td>아이디</td>
-		<td><strong><c:out value="${ userInfo.id }"/></strong></td>
+		<td><strong><c:out value="${ userInfo.id }"/></strong>
+			<input type="button" class="btn btn-info btn-sm" value="조회" id="btnSearch"/></td>
 		</tr>
 		<tr>
 		<td>이름</td>
-		<td><input type="text" name="name" value="" readonly="readonly"></td>
+		<td><input type="text" name="name" value="" readonly="readonly" id="name"></td>
 		</tr>
 		<tr>
 		<td>이메일</td>
-		<td><input type="text" name="email" value=""></td>
+		<td><input type="text" name="email" value="" id="email"></td>
 		</tr>
 		<tr>
 		<td>전화번호</td>
-		<td><input type="text" name="email" value=""></td>
+		<td><input type="text" name="phone" value="" id="phone"></td>
 		</tr>
 		<tr>
 		<td>우편번호</td>
 		<td><input type="text" name="zipcode" value="" style="width: 70px"
-				readonly="readonly"> 
+				readonly="readonly" id="zipcode"> 
 				<input type="button" value="검색" class="btn btn-success btn-sm"/></td>
 		</tr>
 		<tr>
 		<td>주소</td>
 		<td><input type="text" name="address" value="" style="width: 300px"
-				readonly="readonly"> 
+				readonly="readonly" id="address"> 
 		</td>
 		</tr>
 		<tr>
 		<td>상세주소</td>
-		<td><input type="text" name="address2" value="" style="width: 300px"/></td>
+		<td><input type="text" name="address2" value="" style="width: 300px" id="address2"/></td>
 		</tr>
 		<tr>
 		<td>가입 ip주소</td>
-		<td></td>
+		<td><span id="ip"></span></td>
 		</tr>
 		<tr>
 		<td>가입일</td>
-		<td></td>
+		<td><span id="inputDate"></span></td>
 		</tr>
 		<tr>
 		<td colspan="2" align="center">
@@ -249,7 +276,7 @@ $(function(){
 		</div>
 		<!-- FOOTER -->
 		<footer class="container">
-			<c:import url="${CommonUrl}/fragments/footer.jsp"/>
+			<c:import url="${CommonUrl}/frogments/footer.jsp"/>
 		</footer>
 	</main>
 	<script src="${CommonUrl}/common/js/bootstrap.bundle.min.js"

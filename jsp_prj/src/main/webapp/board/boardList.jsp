@@ -1,7 +1,11 @@
+<%@page import="kr.co.sist.board.BoardDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.sist.board.BoardService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/site_Property.jsp" %>
+<%@ include file="../include/site_Property.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -14,7 +18,7 @@
 
 <meta name="theme-color" content="#712cf9">
 
-<c:import url="/frogments/external_file.jsp"></c:import>
+<c:import url="${ CommonUrl }/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -102,13 +106,16 @@
 	color: #0000FF;
 }
 
-.read{
+.red{
 	color: #FF0000;
 }
+
+a{
+	color: #858585;
+	text-decoration: none;
+}
+
 </style>
-<script type="text/javascript">
-var obj = new XMLHttpRequest();
-</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -170,102 +177,106 @@ var obj = new XMLHttpRequest();
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="/frogments/navigationBar.jsp"></c:import>
+			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
-		<div id="myCarousel" class="carousel slide mb-6"
-			data-bs-ride="carousel">
-			<c:import url="/frogments/carousel.jsp"/>
+		<div id="boardDiv" style="margin-top: 20px;">
+		<jsp:useBean id="rDTO" class="kr.co.sist.board.RangeDTO" scope="page"/>
+		<jsp:setProperty property="*" name="rDTO"/>
+		<%
+		BoardService bs = new BoardService();
+		// 1. 총 레코드의 수
+		int totalCnt = 0;
+		totalCnt=bs.totalCnt();
+		// 2. 한 화면에 보여질 게시글의 수 
+		int pageScale=10;
+		
+		// 3. 총 페이지 수 
+		int totalPage = (int)Math.ceil((double)totalCnt/pageScale);
+		
+		// 4. 시작 번호 구하기
+		String tempPage = request.getParameter("currentPage");
+		
+		int currentPage = 1;
+		if(tempPage != null){ // pagenation을 클릭 했을 떄 1,2,3,4 해당 페이지 번호가 입력 
+			currentPage=Integer.parseInt(tempPage);
+		}//end if
+		
+		int startNum = 1;
+		startNum=currentPage * pageScale-pageScale+1;
+		
+		// 5. 선택한 페이지의 끝 번호 구하기 
+		int endNum = startNum + pageScale - 1;
+		
+		rDTO.setStartNum(startNum);
+		rDTO.setEndNum(endNum);
+		
+		List<BoardDTO> listBoard = bs.searchBoard(rDTO);
+		
+		pageContext.setAttribute("totalCnt", totalCnt);
+		pageContext.setAttribute("pageScale", pageScale);
+		pageContext.setAttribute("totalPage", totalPage);
+		pageContext.setAttribute("startNum", startNum);
+		pageContext.setAttribute("endNum", endNum);
+		pageContext.setAttribute("currentPage", currentPage);
+		pageContext.setAttribute("listBoard", listBoard);
+		
+		%>
+		<%-- 총 레코드 수 : ${ totalCnt }건<br>
+		한 화면에 보여질 : ${ pageScale }건<br>	
+		총 페이지 수 : ${ totalPage }건	<br>	
+		현재 페이지 : ${ currentPage }페이지<br>	
+		시작 번호 : ${ startNum }건	<br>
+		끝 번호 : ${ endNum }건	<br> --%>
+		<div id="divBoardHeader">
+			<c:if test="${ not empty userInfo }">
+				<a href="boardWriteForm.jsp" class="btn btn-info btn-sm">글 작성</a>
+			</c:if>
 		</div>
-		<div>
-			<a href="${CommonUrl}/board/boardList.jsp">게시판</a>
+		<div id="divBoardContent" style="height: 500px;">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th style="width: 80px;">번호</th>
+						<th style="width: 400px;">제목</th>
+						<th style="width: 120px;">작성자</th>
+						<th style="width: 150px;">작성일</th>
+						<th style="width: 80px;">조회수</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${ empty listBoard }">
+						<tr>
+							<td colspan="5" style="text-align: center;">게시글이 없습니다.</td>
+						</tr>
+					</c:if>
+					<c:forEach var="bDTO" items="${ listBoard }" varStatus="i">
+						<tr>
+							<td><c:out value="${ totalCnt-(currentPage-1)*pageScale-i.index	}"/></td>
+							<td><a href="boardDetail.jsp?num=${ bDTO.num }"><c:out value="${ bDTO.title }"/></a></td>
+							<td><c:out value="${ bDTO.id }"/></td>
+							<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd kk:mm:ss"/></td>
+							<td><c:out value="${ bDTO.cnt }"/></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
 		</div>
-		<!-- Marketing messaging and featurettes
-  ================================================== -->
-		<!-- Wrap the rest of the page in another container to center all the content. -->
-		<div class="container marketing">
-			<!-- Three columns of text below the carousel -->
-			<div class="row">
-				<c:import url="/frogments/row.jsp"/>
-			</div>
-			<!-- /.row -->
-			<!-- START THE FEATURETTES -->
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-					<%
-					String color = "blue";
-					String method= request.getMethod();
-					if("POST".equals(method)){
-						color="red";
-					}//end if
-					%>
-						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span></span>
-					</h2>
-					<p class="lead">Some great placeholder content for the first
-						featurette here. Imagine some exciting prose here.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7 order-md-2">
-					<h2 class="featurette-heading fw-normal lh-1">
-						Oh yeah, it’s that good. <span class="text-body-secondary">See
-							for yourself.</span>
-					</h2>
-					<p class="lead">Another featurette? Of course. More placeholder
-						content here to give you an idea of how this layout would work
-						with some actual real-world content in place.</p>
-				</div>
-				<div class="col-md-5 order-md-1">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<div class="row featurette">
-				<div class="col-md-7">
-					<h2 class="featurette-heading fw-normal lh-1">
-						And lastly, this one. <span class="text-body-secondary">Checkmate.</span>
-					</h2>
-					<p class="lead">And yes, this is the last block of
-						representative placeholder content. Again, not really intended to
-						be actually read, simply here to give you a better view of what
-						this would look like with some actual content. Your content.</p>
-				</div>
-				<div class="col-md-5">
-					<svg aria-label="Placeholder: 500x500"
-						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-						height="500" preserveAspectRatio="xMidYMid slice" role="img"
-						width="500" xmlns="http://www.w3.org/2000/svg">
-						<title>Placeholder</title><rect width="100%" height="100%"
-							fill="var(--bs-secondary-bg)"></rect>
-						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
-				</div>
-			</div>
-			<hr class="featurette-divider">
-			<!-- /END THE FEATURETTES -->
+		<div id="divSearchForm" style="height: 80px;">
+		
 		</div>
+		<div id="divPagination" style="text-align: center;">
+			<c:forEach var="i" begin="1" end="${ totalPage }" step="1">
+				[<a href="boardList.jsp?currentPage=${i}">${i}</a>]
+			</c:forEach>	
+		</div>
+		</div>
+		
 		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<c:import url="/frogments/footer.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/footer.jsp"/>
 		</footer>
 	</main>
 	<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"
