@@ -1,3 +1,6 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="kr.co.sist.util.BoardUtil"%>
+<%@page import="oracle.net.aso.m"%>
 <%@page import="kr.co.sist.board.BoardDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.sist.board.BoardService"%>
@@ -116,6 +119,28 @@ a{
 }
 
 </style>
+<script type="text/javascript">
+$(function() {
+	$("#keyword").keyup(function(evt) {
+		if(evt.which == 13){
+			chkNull();
+		}//end if
+	});//keyup
+	$("#btnSearch").click(chkNull);
+	
+	// fieldNum의 값이 있다면 select의 option을 선택한 상태로 만들 수 있다. 
+	$("#fieldNum").val("${empty param.fieldNum? '0':param.fieldNum}");
+});//ready
+
+function chkNull() {
+	var keyword = $("#keyword").val();
+	if(keyword.trim() == ""){
+		alert("검색어를 입력해주세요");
+		return;
+	}//end if
+	$("#searchForm").submit();
+}//chkNull
+</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -177,7 +202,7 @@ a{
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
+			<c:import url="/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
@@ -187,27 +212,23 @@ a{
 		<%
 		BoardService bs = new BoardService();
 		// 1. 총 레코드의 수
-		int totalCnt = 0;
-		totalCnt=bs.totalCnt();
+		int totalCnt = bs.totalCnt(rDTO);
 		// 2. 한 화면에 보여질 게시글의 수 
-		int pageScale=10;
+		int pageScale= bs.pageScale();
 		
 		// 3. 총 페이지 수 
-		int totalPage = (int)Math.ceil((double)totalCnt/pageScale);
+		int totalPage = bs.totalPage(totalCnt, pageScale);
 		
 		// 4. 시작 번호 구하기
 		String tempPage = request.getParameter("currentPage");
 		
-		int currentPage = 1;
-		if(tempPage != null){ // pagenation을 클릭 했을 떄 1,2,3,4 해당 페이지 번호가 입력 
-			currentPage=Integer.parseInt(tempPage);
-		}//end if
+		int currentPage = bs.currentPage(tempPage);
 		
-		int startNum = 1;
-		startNum=currentPage * pageScale-pageScale+1;
+		
+		int startNum = bs.startNum(currentPage, pageScale);
 		
 		// 5. 선택한 페이지의 끝 번호 구하기 
-		int endNum = startNum + pageScale - 1;
+		int endNum = bs.endNum(startNum, pageScale);
 		
 		rDTO.setStartNum(startNum);
 		rDTO.setEndNum(endNum);
@@ -223,12 +244,12 @@ a{
 		pageContext.setAttribute("listBoard", listBoard);
 		
 		%>
-		<%-- 총 레코드 수 : ${ totalCnt }건<br>
+		총 레코드 수 : ${ totalCnt }건<br>
 		한 화면에 보여질 : ${ pageScale }건<br>	
 		총 페이지 수 : ${ totalPage }건	<br>	
 		현재 페이지 : ${ currentPage }페이지<br>	
 		시작 번호 : ${ startNum }건	<br>
-		끝 번호 : ${ endNum }건	<br> --%>
+		끝 번호 : ${ endNum }건	<br>
 		<div id="divBoardHeader">
 			<c:if test="${ not empty userInfo }">
 				<a href="boardWriteForm.jsp" class="btn btn-info btn-sm">글 작성</a>
@@ -242,6 +263,7 @@ a{
 						<th style="width: 400px;">제목</th>
 						<th style="width: 120px;">작성자</th>
 						<th style="width: 150px;">작성일</th>
+						<th style="width: 80px;">첨부파일</th>
 						<th style="width: 80px;">조회수</th>
 					</tr>
 				</thead>
@@ -254,22 +276,48 @@ a{
 					<c:forEach var="bDTO" items="${ listBoard }" varStatus="i">
 						<tr>
 							<td><c:out value="${ totalCnt-(currentPage-1)*pageScale-i.index	}"/></td>
-							<td><a href="boardDetail.jsp?num=${ bDTO.num }"><c:out value="${ bDTO.title }"/></a></td>
+							<c:set var = "detailQueryString" value="num=${ bDTO.num }&currentPage=${currentPage}"/>
+							<c:if test="${ not empty param.keyword }">
+							<c:set var = "detailQueryString" value="${ detailQueryString }&fieldNum=${ param.fieldNum }&keyword=${ param.keyword }"/>
+							</c:if>
+							<td><a href="boardDetail.jsp?${detailQueryString}"><c:out value="${ bDTO.title }"/></a></td>
 							<td><c:out value="${ bDTO.id }"/></td>
 							<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd kk:mm:ss"/></td>
+							<td>
+								<c:if test="${ not empty bDTO.upfile }">
+									<a href="${CommonUrl}/board/download.jsp?file=${bDTO.upfile}"><img src="image/img.png" style="width: 30px;"/></a>
+								</c:if>
+							</td>
 							<td><c:out value="${ bDTO.cnt }"/></td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 		</div>
-		<div id="divSearchForm" style="height: 80px;">
-		
+		<div id="divSearchForm" style="height: 80px; text-align: center; ">
+			<form id="searchForm" name="searchForm" action="boardList.jsp">
+				<select name="fieldNum" style="height: 30px" id="fieldNum">
+					<option value="0">제목</option>
+					<option value="1">내용</option>
+					<option value="2">작성자</option>
+				</select>	
+				<input type="text" name="keyword" id="keyword" value="${ param.keyword }"/>		
+				<input type="text" style="display: none;"/>		
+				<input type="button" value="검색" class="btn btn-success btn-sm" id="btnSearch"/> 		
+			</form>
 		</div>
-		<div id="divPagination" style="text-align: center;">
-			<c:forEach var="i" begin="1" end="${ totalPage }" step="1">
-				[<a href="boardList.jsp?currentPage=${i}">${i}</a>]
-			</c:forEach>	
+		<div id="divPagination">
+		<%= BoardUtil.pagination(currentPage, totalPage, "boardList.jsp", rDTO.getFieldNum(),rDTO.getKeyword()) %> 
+		</div>
+		<div>
+		<a href="${ CommonUrl }/board/download.jsp?file=34824632.txt">txt</a>
+		<a href="${ CommonUrl }/board/download.jsp?file=exam0520.html">html</a>
+		<a href="${ CommonUrl }/board/download.jsp?file=20260707_JSP.pptx">pptx</a>
+		<%
+			String fileName = "토끼.png";
+			String encode = URLEncoder.encode(fileName,"UTF-8");
+		%>
+		<a href="">이미지</a>
 		</div>
 		</div>
 		

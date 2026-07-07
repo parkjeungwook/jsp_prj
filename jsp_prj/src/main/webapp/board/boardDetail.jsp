@@ -1,7 +1,9 @@
+<%@page import="kr.co.sist.board.BoardService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../include/site_Property.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -127,6 +129,13 @@
         ]
       });
 		 $('#btnWrite').click(chkNull);
+		 $('#btnUpdate').click(function(){
+			boardModify('u');	 
+		 
+		 });
+		 $('#btnDelete').click(function(){
+			boardModify('d');	 
+		 });
 	});
 	
 	function chkNull() {
@@ -137,6 +146,29 @@
 		}//end if
 		$("#writeForm").submit();
 	}//chkNull
+	
+	function boardModify(jobFlag){
+		
+		var action = "deleteBoard";
+		var msg = "삭제";
+		if(jobFlag == 'u'){
+			action = "updateBoard";
+			msg = "변경";
+		}//end if
+		
+		if(confirm("글을" + msg + "하시겠습니까?")){
+			// 폼태그를 얻어서, action 속성을 변경하고, submit 실행 
+			$("#readForm")[0].action=action+".jsp";
+			// 유효성 검증 
+			if(msg == "변경"){
+				if($("#title").val().trim() == ""){
+					alert("제목은 필수 입력입니다.")
+					return;
+				}//end if
+			}//end if
+			$("#readForm").submit();
+		}//end if
+	}//boardModify
 </script>
 
 </head>
@@ -200,37 +232,79 @@
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
+			<c:import url="/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
 		<div id="divWriteForm" style="margin-top: 20px;">
-			<form action="boardWriteFormProcess.jsp" method="post" name="writeForm" id="writeForm">
+		<%
+			String paramNum = request.getParameter("num");
+			
+			int num = 0;
+			if( paramNum != null ){
+				try{
+				num = Integer.parseInt(paramNum);
+				} catch (NumberFormatException nfe){
+					response.sendRedirect("../error/err_500.jsp");
+					return;
+				}//end catch
+			}//end if
+			
+			BoardService bs = new BoardService();
+			
+			// 같은 글을 새로고침할 때 조회수가 다시 증가하지 않도록 처리
+			String readNum = (String)session.getAttribute("readNum");
+			if(!String.valueOf(num).equals(readNum)){
+				bs.modifyCount(num);
+				session.setAttribute("readNum", String.valueOf(num));
+			}//end if
+			
+			pageContext.setAttribute("bDTO", bs.searchBoardDetail(num));
+			
+		%>
+			<form method="post" name="readForm" id="readForm">
+			<input type="hidden" name="num" value="${ bDTO.num }"/>
+			<input type="hidden" name="currentPage" value="${ param.currentPage }"/>
+			<input type="hidden" name="id" value="${ bDTO.id }"/>
 				<table>
 					<tr>
 						<th colspan="2" style="text-align: center;"><h3>아무말 대잔치 글읽기</h3></th>
 					</tr>
 					<tr>
 						<td width="120px">제목</td>
-						<td><input type="text" name="title" id="title" style="width: 600px"></td>
+						<td><input type="text" name="title" id="title" style="width: 600px" value="${ bDTO.title }" ></td>
 					</tr>
 					<tr>
 						<td>내용</td>
-						<td><textarea name="content" id="content"></textarea></td>
+						<td><textarea name="content" id="content"><c:out value="${ bDTO.content }" escapeXml="true"/></textarea></td>
+					</tr>
+					<tr>
+						<td>첨부파일</td>
+						<td><c:out value="${ bDTO.upfile }"/></td>
 					</tr>
 					<tr>
 						<td>작성자</td>
-						<td><c:out value="${ userId }(${ userName }님)"></c:out></td>
+						<td><c:out value="${ bDTO.id }"></c:out></td>
 					</tr>
 					<tr>
 						<td>ip</td>
-						<td><%= request.getRemoteAddr() %></td>
+						<td><c:out value="${ bDTO.ip }"/></td>
+					</tr>
+					<tr>
+						<td>작성일</td>
+						<td><fmt:formatDate value="${ bDTO.inputDate }" pattern="yyyy-MM-dd EEEE kk:mm:ss"/></td>
 					</tr>
 					<tr>
 						<td colspan="2" align="center">
+						<c:if test="${ userInfo.id == bDTO.id }">
 							<input type="button" value="글수정" id="btnUpdate" class="btn btn-primary btn-sm"/>
 							<input type="button" value="글삭제" id="btnDelete" class="btn btn-warning btn-sm"/>
-							<a href="javascript:history.back()" class="btn btn-primary btn-sm">리스트</a>
+						</c:if>
+							<c:set var="queryString" value="currentPage=${ param.currentPage }"/>
+							<c:if test="${ not empty param.keyword }">
+							<c:set var="queryString" value="${ queryString }&fieldNum=${ param.fieldNum }&keyword=${ param.keyword }"></c:set>
+							</c:if>
+							<a href="javascript:location.href='boardList.jsp?${ queryString }'" class="btn btn-primary btn-sm">리스트</a>
 						</td>
 					</tr>
 				</table>		

@@ -58,4 +58,33 @@ public class MyPageDAO {
 		}//end finally
 		return mDTO;
 	}//selectUserInfo
+	public int updateUserProfile(String id, String profile)throws SQLException {
+		
+		int cnt = 0;
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		GetConnection gc = GetConnection.getInstance();
+		try {
+			// 1. 커넥션 얻기 
+			con = gc.getConn("dbcp");
+			// 2. 쿼리문 수행 객체 얻기 
+			String updateProfile = 
+					" update web_member set profile = ? where id = ? ";
+			pstmt = con.prepareStatement(updateProfile);
+			// 바인드 변수에 값 설정 
+			pstmt.setString(1, profile);
+			pstmt.setString(2, id);
+			// 3. 쿼리문 수행 결과 얻기 
+			cnt = pstmt.executeUpdate();
+			
+		} finally {
+			// 4. 연결 끊기 
+			gc.dbClose(null, pstmt, con);
+		}//end finally
+		return cnt;
+	}//selectUserInfo
+	
+	
 }//class

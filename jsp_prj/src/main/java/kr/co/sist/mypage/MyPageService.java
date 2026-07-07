@@ -42,4 +42,17 @@ public class MyPageService {
 		}//end catch
 		return jsonObj.toJSONString();
 	}//searchLogin
+	
+	public boolean modifyProfile(String id, String profile) {
+		boolean flag = false;
+		
+		MyPageDAO mpDAO = MyPageDAO.getInstance(); 
+		
+		try {
+			flag = mpDAO.updateUserProfile(id, profile)==1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}//end catch
+		return flag;
+	}//modifyProfile
 }//class

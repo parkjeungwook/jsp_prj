@@ -1,8 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="test/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="../include/site_Property.jsp" %>   
+<!-- contentType 속성을 잘못 기술하면 해당파일은 다운로드 된다.  -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/loginCheck.jsp"  %> 
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -10,11 +10,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="generator" content="Astro v5.13.2">
-<title>마이페이지</title>
+<title>Carousel Template · Bootstrap v5.3</title>
 
 <meta name="theme-color" content="#712cf9">
 
-<c:import url="${CommonUrl}/frogments/external_file.jsp"/>
+<c:import url="${ CommonUrl }/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -84,7 +84,7 @@
 	--bs-btn-active-bg: #5a23c8;
 	--bs-btn-active-border-color: #5a23c8
 }
- 
+
 .bd-mode-toggle {
 	z-index: 1500
 }
@@ -98,91 +98,14 @@
 	display: block !important
 }
 
-#프로필 디자인
-#profileWrap{ width: 100%; min-height: 600px; margin-top: 20px;background-color: #FF0000 }
+.blue{
+	color: #0000FF;
+}
 
-
+.read{
+	color: #FF0000;
+}
 </style>
-
-<script type="text/javascript">
-$(function(){
-	//이미지 선택 버튼이 클릭
-	$("#btnProfile").click(function(){
-		//버튼을 클릭했을 때 input type="file"을 클릭한 이벤트를 발생
-		$("#upProfile").click();
-	});//click
-	//file을 선택을 하면 upfile에 값이 변경되야함 => change 이벤트 
-	$("#upProfile").change(uploadProfile);
-	
-	$("#btnSearch").click(function(){
-		
-		var param = { id : "${userInfo.id}" };
-		
-		$.ajax({
-			url : "searchMyPage.jsp",
-			type : "post",
-			data : param,
-			dataType : "JSON",
-			error:function(xhr){
-				console.log(xhr.status + "/" + xhr.statusText);
-			},
-			success:function(jsonObj){
-				$("#profile")[0].src="${ CommonUrl }${ uploadDir }/profile/"+jsonObj.profile;
-				$("#profile").val(jsonObj.profile);
-				$("#name").val(jsonObj.name);
-				$("#email").val(jsonObj.email);
-				$("#phone").val(jsonObj.phone);
-				$("#zipcode").val(jsonObj.zipcode);
-				$("#address").val(jsonObj.address);
-				$("#address2").val(jsonObj.address2);
-				$("#ip").html(jsonObj.ip);
-				$("#inputDate").html(jsonObj.input_date);
-			}
-		});
-	});//click
-});//ready
-
-function uploadProfile(){
-	var fileName = $("#upProfile").val();
-	// 선택한 파일의 확장자를 체크 (이미지만 가능)
-	var ext = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
-	// 선택한 파일의 확장자를 체크 (이미지만 가능 jpg, jpeg,gif,png,bmp)
-	var allowedExt ="jpg,jpeg,gif,png,bmp".split(",");
-	
-	var allowedFlag;
-	for( var i=0; i < allowedExt.length; i++ ){
-		if(allowedFlag = (ext == allowedExt[i])){
-			break;
-		}//end if
-	}//end for
-	
-	if(!allowedFlag){
-		alert("이미지만 선택해주세요");
-		return;
-	}//end if
-	
-	//1. form을 얻어서 FormData 객체에 할당 (parameter 전송 방식으로 binary 전송 방식으로 전환) 
-	var formData = new FormData($("#mypageForm")[0]);
-	$.ajax({
-		url:"${ CommonUrl }/mypage/imgUpload.jsp",
-		type:"post",
-		contentType:false, // parameter 전송방식 => binary 전송 방식으로 바꿈 
-		processData:false, // quert string을 붙이지 않도록 설정 
-		data : formData,
-		dataType : "JSON",
-		error : function(xhr) {
-			alert(xhr.status)
-		},
-		success : function(jsonObj) {
-			if(jsonObj.result){
-				$("#profile")[0].src = "${ CommonUrl }/upload/profile/" + jsonObj.imgName;
-			}else{
-				alert("프로필 이미지가 정상적으로 업로드 되지 않았습니다.");
-			}//end else
-		}
-	});
-}//uploadProfile
-</script>
 </head>
 <body>
 	<svg xmlns="http://www.w3.org/2000/svg" class="d-none"> <symbol
@@ -244,86 +167,102 @@ function uploadProfile(){
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<c:import url="/frogments/navigationBar.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
-		
-		<!-- /.container -->
-		<div id="profileWrap" style="margin-top: 50px; ">
-		<form action="mypageProcess.jsp" method="post" id="mypageForm" name="mypageForm">
-		<table style="margin: 0px auto">
-		<tr>
-		<td style="vertical-align: top;width: 300px ">
-		<img src="${ CommonUrl }${ uploadDir }/profile/default_profile.png"
-		 style="border-radius: 150px; width: 150px; height: 150px;" id="profile"/><br>
-		 <input type="file" name="upProfile" id="upProfile" style="display: none;"/>
-		 <input type="button" value="이미지업로드" class="btn btn-success btn-sm"
-		  id="btnProfile"/>
-		</td>
-		<td>
-		<h3>마이페이지- 정보수정</h3>
-		<table>
-		<tr>
-		<td>아이디</td>
-		<td><strong><c:out value="${ userInfo.id }"/></strong>
-			<input type="button" class="btn btn-info btn-sm" value="조회" id="btnSearch"/></td>
-		</tr>
-		<tr>
-		<td>이름</td>
-		<td><input type="text" name="name" value="" readonly="readonly" id="name"></td>
-		</tr>
-		<tr>
-		<td>이메일</td>
-		<td><input type="text" name="email" value="" id="email"></td>
-		</tr>
-		<tr>
-		<td>전화번호</td>
-		<td><input type="text" name="phone" value="" id="phone"></td>
-		</tr>
-		<tr>
-		<td>우편번호</td>
-		<td><input type="text" name="zipcode" value="" style="width: 70px"
-				readonly="readonly" id="zipcode"> 
-				<input type="button" value="검색" class="btn btn-success btn-sm"/></td>
-		</tr>
-		<tr>
-		<td>주소</td>
-		<td><input type="text" name="address" value="" style="width: 300px"
-				readonly="readonly" id="address"> 
-		</td>
-		</tr>
-		<tr>
-		<td>상세주소</td>
-		<td><input type="text" name="address2" value="" style="width: 300px" id="address2"/></td>
-		</tr>
-		<tr>
-		<td>가입 ip주소</td>
-		<td><span id="ip"></span></td>
-		</tr>
-		<tr>
-		<td>가입일</td>
-		<td><span id="inputDate"></span></td>
-		</tr>
-		<tr>
-		<td colspan="2" align="center">
-			<input type="button" value="변경" class="btn btn-warning btn-sm" 
-			id="btnUpdate"/>
-		</td>
-		</tr>
-		
-		</table>
-		</td>
-		</tr>
-		</table>
-		</form>
+		<div id="myCarousel" class="carousel slide mb-6"
+			data-bs-ride="carousel">
+			<c:import url="${ CommonUrl }/frogments/carousel.jsp"/>
 		</div>
+		<!-- Marketing messaging and featurettes
+  ================================================== -->
+		<!-- Wrap the rest of the page in another container to center all the content. -->
+		<div class="container marketing">
+			<!-- Three columns of text below the carousel -->
+			<div class="row">
+				<c:import url="${ CommonUrl }/frogments/row.jsp"/>
+			</div>
+			<!-- /.row -->
+			<!-- START THE FEATURETTES -->
+			<hr class="featurette-divider">
+			<div class="row featurette">
+				<div class="col-md-7">
+					<h2 class="featurette-heading fw-normal lh-1">
+					<%
+					String color = "blue";
+					String method= request.getMethod();
+					if("POST".equals(method)){
+						color="red";
+					}//end if
+					%>
+						요청방식 <span class="text-body-secondary"><span class="<%=color%>"><%= method %></span>
+					</h2>
+					<p class="lead">Some great placeholder content for the first
+						featurette here. Imagine some exciting prose here.</p>
+				</div>
+				<div class="col-md-5">
+					<svg aria-label="Placeholder: 500x500"
+						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
+						height="500" preserveAspectRatio="xMidYMid slice" role="img"
+						width="500" xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-bg)"></rect>
+						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
+				</div>
+			</div>
+			<hr class="featurette-divider">
+			<div class="row featurette">
+				<div class="col-md-7 order-md-2">
+					<h2 class="featurette-heading fw-normal lh-1">
+						Oh yeah, it’s that good. <span class="text-body-secondary">See
+							for yourself.</span>
+					</h2>
+					<p class="lead">Another featurette? Of course. More placeholder
+						content here to give you an idea of how this layout would work
+						with some actual real-world content in place.</p>
+				</div>
+				<div class="col-md-5 order-md-1">
+					<svg aria-label="Placeholder: 500x500"
+						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
+						height="500" preserveAspectRatio="xMidYMid slice" role="img"
+						width="500" xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-bg)"></rect>
+						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
+				</div>
+			</div>
+			<hr class="featurette-divider">
+			<div class="row featurette">
+				<div class="col-md-7">
+					<h2 class="featurette-heading fw-normal lh-1">
+						And lastly, this one. <span class="text-body-secondary">Checkmate.</span>
+					</h2>
+					<p class="lead">And yes, this is the last block of
+						representative placeholder content. Again, not really intended to
+						be actually read, simply here to give you a better view of what
+						this would look like with some actual content. Your content.</p>
+				</div>
+				<div class="col-md-5">
+					<svg aria-label="Placeholder: 500x500"
+						class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
+						height="500" preserveAspectRatio="xMidYMid slice" role="img"
+						width="500" xmlns="http://www.w3.org/2000/svg">
+						<title>Placeholder</title><rect width="100%" height="100%"
+							fill="var(--bs-secondary-bg)"></rect>
+						<text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
+				</div>
+			</div>
+			<hr class="featurette-divider">
+			<!-- /END THE FEATURETTES -->
+		</div>
+		<!-- /.container -->
 		<!-- FOOTER -->
 		<footer class="container">
-			<c:import url="${CommonUrl}/frogments/footer.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/footer.jsp"/>
 		</footer>
 	</main>
-	<script src="${CommonUrl}/common/js/bootstrap.bundle.min.js"
+	<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>

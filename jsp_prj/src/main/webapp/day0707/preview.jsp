@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="../include/site_Property.jsp" %>   
+<%@ include file="../include/site_Property.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="../include/loginCheck.jsp"  %> 
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
 <head>
@@ -10,11 +10,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="generator" content="Astro v5.13.2">
-<title>마이페이지</title>
+<title>Carousel Template · Bootstrap v5.3</title>
 
 <meta name="theme-color" content="#712cf9">
 
-<c:import url="${CommonUrl}/frogments/external_file.jsp"/>
+<c:import url="${ CommonUrl }/frogments/external_file.jsp"></c:import>
 
 <style>
 .bd-placeholder-img {
@@ -84,7 +84,7 @@
 	--bs-btn-active-bg: #5a23c8;
 	--bs-btn-active-border-color: #5a23c8
 }
- 
+
 .bd-mode-toggle {
 	z-index: 1500
 }
@@ -98,90 +98,35 @@
 	display: block !important
 }
 
-#프로필 디자인
-#profileWrap{ width: 100%; min-height: 600px; margin-top: 20px;background-color: #FF0000 }
+.blue{
+	color: #0000FF;
+}
 
-
+.read{
+	color: #FF0000;
+}
 </style>
-
 <script type="text/javascript">
-$(function(){
-	//이미지 선택 버튼이 클릭
-	$("#btnProfile").click(function(){
-		//버튼을 클릭했을 때 input type="file"을 클릭한 이벤트를 발생
-		$("#upProfile").click();
+$(function() {
+	$("#btnImg").click(function(){
+		$("#file").click();
 	});//click
-	//file을 선택을 하면 upfile에 값이 변경되야함 => change 이벤트 
-	$("#upProfile").change(uploadProfile);
 	
-	$("#btnSearch").click(function(){
-		
-		var param = { id : "${userInfo.id}" };
-		
-		$.ajax({
-			url : "searchMyPage.jsp",
-			type : "post",
-			data : param,
-			dataType : "JSON",
-			error:function(xhr){
-				console.log(xhr.status + "/" + xhr.statusText);
-			},
-			success:function(jsonObj){
-				$("#profile")[0].src="${ CommonUrl }${ uploadDir }/profile/"+jsonObj.profile;
-				$("#profile").val(jsonObj.profile);
-				$("#name").val(jsonObj.name);
-				$("#email").val(jsonObj.email);
-				$("#phone").val(jsonObj.phone);
-				$("#zipcode").val(jsonObj.zipcode);
-				$("#address").val(jsonObj.address);
-				$("#address2").val(jsonObj.address2);
-				$("#ip").html(jsonObj.ip);
-				$("#inputDate").html(jsonObj.input_date);
-			}
-		});
-	});//click
-});//ready
-
-function uploadProfile(){
-	var fileName = $("#upProfile").val();
-	// 선택한 파일의 확장자를 체크 (이미지만 가능)
-	var ext = fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
-	// 선택한 파일의 확장자를 체크 (이미지만 가능 jpg, jpeg,gif,png,bmp)
-	var allowedExt ="jpg,jpeg,gif,png,bmp".split(",");
-	
-	var allowedFlag;
-	for( var i=0; i < allowedExt.length; i++ ){
-		if(allowedFlag = (ext == allowedExt[i])){
-			break;
-		}//end if
-	}//end for
-	
-	if(!allowedFlag){
-		alert("이미지만 선택해주세요");
-		return;
-	}//end if
-	
-	//1. form을 얻어서 FormData 객체에 할당 (parameter 전송 방식으로 binary 전송 방식으로 전환) 
-	var formData = new FormData($("#mypageForm")[0]);
-	$.ajax({
-		url:"${ CommonUrl }/mypage/imgUpload.jsp",
-		type:"post",
-		contentType:false, // parameter 전송방식 => binary 전송 방식으로 바꿈 
-		processData:false, // quert string을 붙이지 않도록 설정 
-		data : formData,
-		dataType : "JSON",
-		error : function(xhr) {
-			alert(xhr.status)
-		},
-		success : function(jsonObj) {
-			if(jsonObj.result){
-				$("#profile")[0].src = "${ CommonUrl }/upload/profile/" + jsonObj.imgName;
-			}else{
-				alert("프로필 이미지가 정상적으로 업로드 되지 않았습니다.");
-			}//end else
+	// 이벤트가 발생하면 
+	$("#file").change(function(evt) {
+		var file = evt.target.files[0];//file dialog에서 선택한 파일의 정보를 저장 
+		// 스트림 생성 
+		var reader = new FileReader();
+		// onloadevent를 설정 
+		reader.onload=function(evt){
+			$("#img").prop("src",evt.target.result);//Base64로 인코딩 된 이미지가 설정된다. 
 		}
+		reader.readAsDataURL( file );
 	});
-}//uploadProfile
+	$("#btnImg2").click(function() {
+		alert($("#file").val())
+	})
+})
 </script>
 </head>
 <body>
@@ -244,86 +189,20 @@ function uploadProfile(){
 	</div>
 	<header data-bs-theme="dark">
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<c:import url="/frogments/navigationBar.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/navigationBar.jsp"></c:import>
 		</nav>
 	</header>
 	<main>
-		
-		<!-- /.container -->
-		<div id="profileWrap" style="margin-top: 50px; ">
-		<form action="mypageProcess.jsp" method="post" id="mypageForm" name="mypageForm">
-		<table style="margin: 0px auto">
-		<tr>
-		<td style="vertical-align: top;width: 300px ">
-		<img src="${ CommonUrl }${ uploadDir }/profile/default_profile.png"
-		 style="border-radius: 150px; width: 150px; height: 150px;" id="profile"/><br>
-		 <input type="file" name="upProfile" id="upProfile" style="display: none;"/>
-		 <input type="button" value="이미지업로드" class="btn btn-success btn-sm"
-		  id="btnProfile"/>
-		</td>
-		<td>
-		<h3>마이페이지- 정보수정</h3>
-		<table>
-		<tr>
-		<td>아이디</td>
-		<td><strong><c:out value="${ userInfo.id }"/></strong>
-			<input type="button" class="btn btn-info btn-sm" value="조회" id="btnSearch"/></td>
-		</tr>
-		<tr>
-		<td>이름</td>
-		<td><input type="text" name="name" value="" readonly="readonly" id="name"></td>
-		</tr>
-		<tr>
-		<td>이메일</td>
-		<td><input type="text" name="email" value="" id="email"></td>
-		</tr>
-		<tr>
-		<td>전화번호</td>
-		<td><input type="text" name="phone" value="" id="phone"></td>
-		</tr>
-		<tr>
-		<td>우편번호</td>
-		<td><input type="text" name="zipcode" value="" style="width: 70px"
-				readonly="readonly" id="zipcode"> 
-				<input type="button" value="검색" class="btn btn-success btn-sm"/></td>
-		</tr>
-		<tr>
-		<td>주소</td>
-		<td><input type="text" name="address" value="" style="width: 300px"
-				readonly="readonly" id="address"> 
-		</td>
-		</tr>
-		<tr>
-		<td>상세주소</td>
-		<td><input type="text" name="address2" value="" style="width: 300px" id="address2"/></td>
-		</tr>
-		<tr>
-		<td>가입 ip주소</td>
-		<td><span id="ip"></span></td>
-		</tr>
-		<tr>
-		<td>가입일</td>
-		<td><span id="inputDate"></span></td>
-		</tr>
-		<tr>
-		<td colspan="2" align="center">
-			<input type="button" value="변경" class="btn btn-warning btn-sm" 
-			id="btnUpdate"/>
-		</td>
-		</tr>
-		
-		</table>
-		</td>
-		</tr>
-		</table>
-		</form>
-		</div>
+		<img src="../upload/profile/default_img2.png" style="width: 80px;" id="img"/>
+		<input type="file" name="file" id="file" style="display: none"/>
+		<input type="button" value="이미지 선택" id="btnImg" class="btn btn-success btn-sm"/>		
+		<input type="button" value="이미지 사용" id="btnImg2" class="btn btn-success btn-sm"/>		
 		<!-- FOOTER -->
 		<footer class="container">
-			<c:import url="${CommonUrl}/frogments/footer.jsp"/>
+			<c:import url="${ CommonUrl }/frogments/footer.jsp"/>
 		</footer>
 	</main>
-	<script src="${CommonUrl}/common/js/bootstrap.bundle.min.js"
+	<script src="${ CommonUrl }/common/js/bootstrap.bundle.min.js"
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		class="astro-vvvwv3sm"></script>
 </body>
